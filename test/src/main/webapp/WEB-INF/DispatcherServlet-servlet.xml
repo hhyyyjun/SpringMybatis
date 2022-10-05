@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
+
+
+	<!-- 2022.09.22 -->
+	<context:component-scan
+		base-package="com.kim.biz" />
+
+	<!-- <aop:aspectj-autoproxy /> -->
+
+	<!-- DataSource 설정하기 -->
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
+		destroy-method="close"> <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" 
+		/> <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" /> <property 
+		name="username" value="dgw" /> <property name="password" value="950617" /> 
+		</bean> Spring JDBC 설정하기 <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"> 
+		<property name="dataSource" ref="dataSource" /> </bean> -->
+
+	<!-- 파일 업로드 2022.09.27 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="1000000" />
+	</bean>
+
+	<!-- 2022.09.28 에러페이지 관련 어노테이션 설정 mvc namespace 추가하였음 -->
+	<!-- <mvc:annotation-driven /> -->
+	<!-- mvc관련 어노테이션 드라이브 사용할건데 너가 스캔해줘~ -->
+
+	<!-- xml로 예외 설정 -->
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.NullPointerException">error/error.jsp</prop>
+				<prop key="java.lang.ArithmeticException">error/error.jsp</prop>
+				<prop key="java.lang.Exception">error/error.jsp</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 2022.09.29 다국어 처리 -->
+	 <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+      <property name="basenames">
+         <list>
+            <value>message.messageSource</value>
+         </list>
+      </property>
+   </bean>
+
+	
+	<!-- LocaleResolver -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+	<!-- LocaleChangeInterceptor -->
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="lang" />
+		</bean>
+	</mvc:interceptors>
+
+	<!-- 2022.09.21 -->
+	<!-- Controller 객체 등록 -->
+	<!-- <bean id="login" class="com.kim.biz.controller.LoginController" /> 
+		<bean id="main" class="com.kim.biz.controller.MainController" /> <bean id="board" 
+		class="com.kim.biz.controller.BoardController" /> <bean id="logout" class="com.kim.biz.controller.LogoutController" 
+		/> -->
+
+	<!-- HM 등록 -->
+	<!-- <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"> 
+		<property name="mappings"> <props> <prop key="/login.do">login</prop> <prop 
+		key="/main.do">main</prop> <prop key="/board.do">board</prop> <prop key="/logout.do">logout</prop> 
+		</props> </property> </bean> -->
+
+
+	<!-- ViewResolver 등록 -->
+	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
+		<property name="prefix" value="/WEB-INF/view/" /> <property name="suffix" 
+		value=".jsp" /> </bean> -->
+</beans>
